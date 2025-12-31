@@ -94,8 +94,8 @@ const App: React.FC = () => {
                   🎍
                 </span>
               </div>
-              <p className="mt-2 text-xs text-slate-500">
-                お正月をモチーフにした画像が生成されます。力作は是非シェアしてください！
+              <p className="mt-2 text-xs text-slate-500 italic">
+                ※お正月にちなんだ、文字のない縁起の良い画像が生成されます。
               </p>
             </div>
 
@@ -184,7 +184,7 @@ const App: React.FC = () => {
 
         <div className="text-center text-slate-500 text-xs md:text-sm">
           <p>© KatsuNagAI Project</p>
-          <p className="mt-2">AIが生成する画像は若干時間がかかります。餅でも食べながらお待ち下さい。>Ap>
+          <p className="mt-2">みんなの福が集まる場所。素敵な一年になりますように。</p>
         </div>
       </main>
 
