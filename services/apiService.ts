@@ -5,7 +5,6 @@ import { getStorage, ref, uploadString, getDownloadURL } from "firebase/storage"
 import { GalleryItem } from '../types';
 
 // 環境変数から設定を読み込みます
-// Viteのdefine設定により、ビルド時に実際の値に置き換わります
 const firebaseConfig = {
     apiKey: process.env.FB_API_KEY,
     authDomain: process.env.FB_AUTH_DOMAIN,
@@ -51,7 +50,8 @@ export const apiService = {
 
   async getGallery(): Promise<GalleryItem[]> {
     try {
-      const q = query(collection(db, "gallery"), orderBy("createdAt", "desc"), limit(30));
+      // ランダム表示の母数を増やすため取得件数を60件に拡大
+      const q = query(collection(db, "gallery"), orderBy("createdAt", "desc"), limit(60));
       const querySnapshot = await getDocs(q);
       
       return querySnapshot.docs.map(doc => ({
