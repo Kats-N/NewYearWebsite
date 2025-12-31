@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback } from 'react';
 import NewYearHeader from './components/NewYearHeader';
 import ShareButtons from './components/ShareButtons';
@@ -17,6 +18,7 @@ const App: React.FC = () => {
   const [isPosting, setIsPosting] = useState(false);
   const [hasPosted, setHasPosted] = useState(false);
 
+  // Fetch the latest works from the gallery.
   const loadGallery = useCallback(async () => {
     try {
       const items = await apiService.getGallery();
@@ -30,6 +32,7 @@ const App: React.FC = () => {
     loadGallery();
   }, [loadGallery]);
 
+  // Handle the image generation request via Gemini API.
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!userInput.trim()) return;
@@ -48,6 +51,7 @@ const App: React.FC = () => {
     }
   };
 
+  // Handle posting the generated work to the public gallery.
   const handlePost = async () => {
     if (!generatedUrl || !nickname.trim() || !userInput.trim()) return;
 
@@ -73,6 +77,7 @@ const App: React.FC = () => {
       <NewYearHeader />
 
       <main className="max-w-2xl mx-auto w-full px-4 flex-grow space-y-12">
+        {/* Form section for user input and image generation */}
         <section className="bg-white p-6 rounded-2xl shadow-xl border border-red-100 ring-1 ring-black/5">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
@@ -94,7 +99,7 @@ const App: React.FC = () => {
                   🎍
                 </span>
               </div>
-              <p className="mt-2 text-xs text-slate-500 italic">
+              <p className="mt-2 text-xs text-slate-500">
                 「お正月」をベースにした画像がAI生成されます。力作は是非シェアしてください！
               </p>
             </div>
@@ -165,6 +170,7 @@ const App: React.FC = () => {
           )}
         </section>
 
+        {/* Gallery section for viewing public works */}
         <section className="space-y-6">
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-black text-slate-800 flex items-center gap-3">
@@ -172,7 +178,7 @@ const App: React.FC = () => {
               新春・作品広場
             </h2>
             <button 
-              onClick={loadGallery}
+              onClick={() => loadGallery()}
               className="text-xs text-red-600 hover:underline font-bold"
             >
               更新する ↻
@@ -198,3 +204,4 @@ const App: React.FC = () => {
 };
 
 export default App;
+
