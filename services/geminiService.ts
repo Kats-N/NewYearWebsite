@@ -1,34 +1,24 @@
-
 import { GoogleGenAI } from "@google/genai";
 
 export async function generateNewYearImage(userInput: string): Promise<string> {
   const apiKey = process.env.API_KEY;
-  if (!apiKey) {
-    throw new Error("APIキーが設定されていません。");
+  if (!apiKey || apiKey === "undefined") {
+    console.error("Gemini API Key is missing in the build environment.");
+    throw new Error("APIキーが正しく設定されていません。再デプロイを試してください。");
   }
 
   const ai = new GoogleGenAI({ apiKey });
   
-  /**
-   * 文字化け・中国語風文字を避けるための新戦略:
-   * 1. 「文字・テキストを一切排除」することを最優先の指示とする。
-   * 2. 「書道 (Calligraphy)」という単語自体が文字を誘発するため、これを削除。
-   * 3. 象徴的な「モチーフ」と「雰囲気」に焦点を当てる。
-   */
   const prompt = `A cinematic and artistic Japanese New Year visual: "${userInput}". 
   Style: Modern traditional Japanese art, vibrant colors with gold and vermilion accents. 
-  Themes: Festive motifs like Mizuhiki (decorative cords), pine needles, cherry blossoms, and rising sun. 
-  Technical specs: Sharp focus, 8k resolution, elegant composition, high-end seasonal aesthetic. 
-  CRITICAL INSTRUCTION: DO NOT include any text, letters, Kanji, alphabets, or words. 
-  Absolutely NO calligraphy. Ensure the image is purely visual and wordless.`;
+  Themes: Festive motifs like Mizuhiki, pine, cherry blossoms, and sun. 
+  CRITICAL: DO NOT include any text, Kanji, or words. Purely visual.`;
 
   try {
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash-image',
       contents: {
-        parts: [
-          { text: prompt },
-        ],
+        parts: [{ text: prompt }],
       },
       config: {
         imageConfig: {
@@ -37,20 +27,24 @@ export async function generateNewYearImage(userInput: string): Promise<string> {
       },
     });
 
-    if (!response.candidates?.[0]?.content?.parts) {
-      throw new Error("画像の生成に失敗しました。");
+    if (!response.candidates || response.candidates.length === 0) {
+      throw new Error("画像が生成されませんでした。別の言葉を試してください。");
     }
 
-    // Find the image part
-    for (const part of response.candidates[0].content.parts) {
+    const parts = response.candidates[0].content.parts;
+    for (const part of parts) {
       if (part.inlineData) {
         return `data:${part.inlineData.mimeType};base64,${part.inlineData.data}`;
       }
     }
 
-    throw new Error("画像データが見つかりませんでした。");
-  } catch (error) {
-    console.error("Gemini API Error:", error);
+    throw new Error("画像データが応答に含まれていませんでした。");
+  } catch (error: any) {
+    console.error("Gemini API Detailed Error:", error);
+    // 安全フィルターなどでブロックされた場合もここに来ます
+    if (error.message?.includes("Safety")) {
+      throw new Error("不適切な表現が含まれている可能性があるため、画像を生成できませんでした。");
+    }
     throw error;
   }
 }
