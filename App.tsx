@@ -169,7 +169,28 @@ const App: React.FC = () => {
             </div>
           )}
         </section>
-
+        
+        {/* Featured Illustration from the Creator */}
+        <section className="space-y-4 text-center animate-in fade-in slide-in-from-bottom-2 duration-1000 delay-300">
+          <div className="relative inline-block">
+            <div className="absolute -inset-1 bg-gradient-to-r from-yellow-400 via-red-500 to-yellow-400 rounded-lg blur-sm opacity-30"></div>
+            <div className="relative bg-white p-2 rounded-lg border-2 border-yellow-500/30 shadow-2xl">
+              <img 
+                src="./Gemini_Generated_Image_7x9cfq7x9cfq7x9c.png" 
+                alt="2026年 あけましておめでとう - 家族イラスト" 
+                className="rounded w-full h-auto max-h-[400px] object-contain"
+                onError={(e) => {
+                  // 画像がない場合のフォールバック（デバッグ用）
+                  (e.target as HTMLImageElement).style.display = 'none';
+                }}
+              />
+            </div>
+            <div className="mt-4 inline-flex items-center gap-2 px-4 py-1 bg-red-700 text-white rounded-full text-xs font-bold shadow-md">
+              <span>🖌️</span> たくさんの幸せがウマれますように
+            </div>
+          </div>
+        </section>
+                
         {/* Gallery section for viewing public works */}
         <section className="space-y-6">
           <div className="flex items-center justify-between">
